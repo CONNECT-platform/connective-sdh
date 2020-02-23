@@ -1,2 +1,2 @@
 export * from './renderer';
-export * from './compiler';
+export * from './compile';

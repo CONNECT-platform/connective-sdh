@@ -2,6 +2,7 @@ import { JSDOM } from 'jsdom';
 const registerGlobalDom = require('jsdom-global');
 
 import { StaticRenderer } from './renderer';
+import { Compiled } from './compiled';
 
 
 export type RenderFunc = (
@@ -12,22 +13,18 @@ export type RenderFunc = (
   ) => void | Promise<void>;
 
 
-export class Compiler {
-  constructor() {
-    try { document } catch(_) { registerGlobalDom(); }
-  }
+export function compile(render: RenderFunc) {
+  try { document } catch(_) { registerGlobalDom(); }
 
-  async compile(render: RenderFunc): Promise<string> {
-    const dom = new JSDOM();
-    const renderer = new StaticRenderer();
+  const dom = new JSDOM();
+  const renderer = new StaticRenderer();
 
+  return new Compiled(dom, (async() => {
     await render(
       node => renderer.render(node).on(dom.window.document.head),
       node => renderer.render(node).on(dom.window.document.body),
       renderer,
       dom.window.document
     );
-
-    return dom.serialize();
-  }
+  })());
 }

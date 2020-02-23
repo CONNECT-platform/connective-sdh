@@ -1,14 +1,13 @@
-import { Compiler, StaticRenderer } from '../src/static';
+import { compile, StaticRenderer } from '../src/static';
 
-const compiler = new Compiler();
 
 const MyComp = ({ name }: any, renderer: StaticRenderer) => <div>Hellow {name}</div>;
 
-compiler.compile((body, head, renderer) => {
+compile((body, head, renderer) => {
   head(
     <title>TEST!</title>
   );
   body(
-    <MyComp name='world'></MyComp>
+    <MyComp name='World!'></MyComp>
   );
-}).then(console.log);
+}).toFile('index.html', 'dist');
