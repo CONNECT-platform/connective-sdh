@@ -4,6 +4,7 @@
   "description": "Library for Static (Server-side) and Dynamic (Client-side) HTML rendering",
   "main": "index.js",
   "scripts": {
+    "start": "ts-node ./samples/index.tsx",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,6 +18,20 @@
   },
   "homepage": "https://github.com/CONNECT-platform/connective-sdh#readme",
   "dependencies": {
-    "@connectv/html": "0.0.12"
+    "@connectv/html": "0.0.12",
+    "@types/jsdom": "^16.1.0",
+    "@types/jsdom-global": "^3.0.2",
+    "jsdom": "^16.2.0",
+    "jsdom-global": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.9",
+    "@types/mocha": "^7.0.1",
+    "@types/node": "^13.7.4",
+    "chai": "^4.2.0",
+    "mocha": "^7.0.1",
+    "ts-loader": "^6.2.1",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.2"
   }
 }
