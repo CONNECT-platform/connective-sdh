@@ -1,0 +1,22 @@
+{
+  "name": "connective-sdh",
+  "version": "0.0.1",
+  "description": "Library for Static (Server-side) and Dynamic (Client-side) HTML rendering",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CONNECT-platform/connective-sdh.git"
+  },
+  "author": "Eugene Ghanizadeh Khoub <ghanizadeh.eugene@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CONNECT-platform/connective-sdh/issues"
+  },
+  "homepage": "https://github.com/CONNECT-platform/connective-sdh#readme",
+  "dependencies": {
+    "@connectv/html": "0.0.12"
+  }
+}
