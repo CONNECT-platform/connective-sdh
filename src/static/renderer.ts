@@ -1,8 +1,7 @@
-import { ExtensibleRenderer, CompType, RefPlugin, InnerHTMLPlugin, ComponentPlugin, Component } from '@connectv/html';
+import { ExtensibleRenderer, RefPlugin, InnerHTMLPlugin, ComponentPlugin, Component } from '@connectv/html';
 
-
-export type Renderable = RawValue | Promise<RawValue> | Promise<Node>;
-export type ComponentType = string | CompType<Renderable, string>;
+import { Renderable, ComponentType } from './types';
+import { promisePlugins } from './plugins';
 
 
 export class StaticRenderer extends ExtensibleRenderer<Renderable, ComponentType> {
@@ -11,6 +10,7 @@ export class StaticRenderer extends ExtensibleRenderer<Renderable, ComponentType
       new RefPlugin<Renderable, ComponentType>(),
       new InnerHTMLPlugin<Renderable, ComponentType>(),
       new ComponentPlugin<Renderable, ComponentType>(),
+      ...promisePlugins<Renderable, ComponentType>(),
     );
   }
 }

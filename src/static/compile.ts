@@ -21,8 +21,8 @@ export function compile(render: RenderFunc) {
 
   return new Compiled(dom, (async() => {
     await render(
-      node => renderer.render(node).on(dom.window.document.head),
       node => renderer.render(node).on(dom.window.document.body),
+      node => renderer.render(node).on(dom.window.document.head),
       renderer,
       dom.window.document
     );
