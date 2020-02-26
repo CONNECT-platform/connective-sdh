@@ -15,12 +15,12 @@ export class Compiled {
     return true;
   }
 
-  async toString() {
+  async serialize() {
     await this.isReady();
     return this.dom.serialize();
   }
 
-  async toFile(path: string, root?: string) {
+  async save(path: string, root?: string) {
     await this.isReady();
     return writeFile()({ path, root: root || '',  content: this.dom.serialize() });
   }

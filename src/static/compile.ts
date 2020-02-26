@@ -6,11 +6,9 @@ import { Compiled } from './compiled';
 
 
 export type RenderFunc = (
-    body: (node: Node) => void,
-    head: (node: Node) => void,
     renderer: StaticRenderer, 
     document: Document,
-  ) => void | Promise<void>;
+  ) => Node | Promise<Node>;
 
 
 export function compile(render: RenderFunc) {
@@ -20,11 +18,25 @@ export function compile(render: RenderFunc) {
   const renderer = new StaticRenderer();
 
   return new Compiled(dom, (async() => {
-    await render(
-      node => renderer.render(node).on(dom.window.document.body),
-      node => renderer.render(node).on(dom.window.document.head),
+    const node = await render(
       renderer,
       dom.window.document
     );
+
+    if (node instanceof HTMLHtmlElement) {
+      (node.firstChild as Node).childNodes.forEach(child => renderer.render(child).on(dom.window.document.head));
+      (node.lastChild as Node).childNodes.forEach(child => renderer.render(child).on(dom.window.document.body));
+      // TODO: clean this up
+      // TODO: set body attributes as well
+    }
+    else if (node instanceof HTMLHeadElement) {
+      node.childNodes.forEach(child => renderer.render(child).on(dom.window.document.head));
+    }
+    else if (node instanceof HTMLBodyElement) {
+      node.childNodes.forEach(child => renderer.render(child).on(dom.window.document.body));
+    }
+    else {
+      renderer.render(node).on(dom.window.document.body);
+    }
   })());
 }
