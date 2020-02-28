@@ -14,12 +14,12 @@ export class PinPlugin<R, T> implements
   setprop(prop: string, target: R | PinLike, host: HTMLElement) {
     if (isPinLike(target)) {
       attachPromise(host, target.observable.toPromise().then(v => {
-        if (typeof v === 'boolean') {
-          if (v) host.setAttribute(prop, '');
+        if (typeof v.value === 'boolean') {
+          if (v.value) host.setAttribute(prop, '');
           else host.removeAttribute(prop);
         }
         else
-          host.setAttribute(prop, (v !== undefined) ? v.toString() : '')
+          host.setAttribute(prop, (v.value !== undefined) ? v.value.toString() : '')
       }));
 
       return true;

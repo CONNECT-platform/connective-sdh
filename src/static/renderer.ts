@@ -1,4 +1,9 @@
-import { ExtensibleRenderer, RefPlugin, InnerHTMLPlugin, ComponentPlugin, Component, ExposePlugin, CheckCompInputsPlugin } from '@connectv/html';
+import { ExtensibleRenderer, Component,
+        RefPlugin, 
+        InnerHTMLPlugin, 
+        ComponentPlugin, 
+        ExposePlugin, 
+        CheckCompInputsPlugin } from '@connectv/html';
 
 import { Renderable, ComponentType } from './types';
 import { observablePlugins } from './observable';
@@ -15,8 +20,8 @@ export class StaticRenderer extends ExtensibleRenderer<Renderable, ComponentType
       new ExposePlugin<Renderable, ComponentType>(),
       new CheckCompInputsPlugin<Renderable, ComponentType>(),
       ...observablePlugins<Renderable, ComponentType>(),
-      ...pinPlugins<Renderable, ComponentType>(),
       ...promisePlugins<Renderable, ComponentType>(),
+      ...pinPlugins<Renderable, ComponentType>(),
     );
   }
 }
