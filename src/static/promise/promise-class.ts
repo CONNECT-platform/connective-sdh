@@ -1,7 +1,7 @@
 import { ClassListFixed, PluginPriority, PropertyPlugin } from '@connectv/html';
 
 
-import { attachPromise } from "../is-ready";
+import { attachPromise } from "../lifecycle";
 
 
 export class PromiseClassPlugin<R, T> implements 

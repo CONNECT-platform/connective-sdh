@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 
 import { PropertyPlugin, AppendPlugin, PluginPriority } from '@connectv/html';
 
-import { attachPromise } from '../is-ready';
+import { attachPromise, whenRendered } from '../lifecycle';
 
 
 export class ObservablePlugin<R, T> implements 
@@ -13,14 +13,16 @@ export class ObservablePlugin<R, T> implements
 
   setprop(prop: string, target: R | Observable<RawValue>, host: HTMLElement) {
     if (target instanceof Observable) {
-      attachPromise(host, target.toPromise().then(v => {
-        if (typeof v === 'boolean') {
-          if (v) host.setAttribute(prop, '');
-          else host.removeAttribute(prop);
-        }
-        else
-          host.setAttribute(prop, (v !== undefined) ? v.toString() : '')
-      }));
+      whenRendered(host, () => {
+        attachPromise(host, target.toPromise().then(v => {
+          if (typeof v === 'boolean') {
+            if (v) host.setAttribute(prop, '');
+            else host.removeAttribute(prop);
+          }
+          else
+            host.setAttribute(prop, (v !== undefined) ? v.toString() : '')
+        }));
+      });
 
       return true;
     }
@@ -32,9 +34,11 @@ export class ObservablePlugin<R, T> implements
     if (target instanceof Observable) {
       let _target = document.createTextNode('');
 
-      attachPromise(host, target.toPromise().then(v => {
-        _target.textContent = (v !== undefined) ? v.toString() : '';
-      }));
+      whenRendered(host, () => {
+        attachPromise(host, target.toPromise().then(v => {
+          _target.textContent = (v !== undefined) ? v.toString() : '';
+        }));
+      });
 
       host.appendChild(_target);
 

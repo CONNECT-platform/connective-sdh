@@ -1,6 +1,6 @@
 import { PluginPriority, PropertyPlugin } from "@connectv/html";
 
-import { attachPromise } from "../is-ready";
+import { attachPromise } from "../lifecycle";
 
 
 export class PromiseInnerHTMLPlugin<R, T> implements 

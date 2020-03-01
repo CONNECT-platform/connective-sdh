@@ -1,7 +1,7 @@
 import { PinLike, isPinLike } from '@connectv/core';
 import { PropertyPlugin, PluginPriority } from "@connectv/html";
 
-import { attachPromise } from '../is-ready';
+import { attachPromise, whenRendered } from '../lifecycle';
 
 
 export class PinInnerHTMLPlugin<R, T> implements 
@@ -11,9 +11,11 @@ export class PinInnerHTMLPlugin<R, T> implements
 
   setprop(prop: string, target: R | PinLike, host: HTMLElement) {
     if (prop === '_innerHTML' && isPinLike(target)) {
-      attachPromise(host, target.observable.toPromise().then(v => {
-        host.innerHTML = (v.value !== undefined)?v.value.toString():'';
-      }));
+      whenRendered(host, () => {
+        attachPromise(host, target.observable.toPromise().then(v => {
+          host.innerHTML = (v.value !== undefined)?v.value.toString():'';
+        }));
+      });
 
       return true;
     }

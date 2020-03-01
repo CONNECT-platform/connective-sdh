@@ -3,6 +3,7 @@ const registerGlobalDom = require('jsdom-global');
 
 import { StaticRenderer } from './renderer';
 import { Compiled } from './compiled';
+import { isRendered } from './lifecycle';
 
 
 export type RenderFunc = (
@@ -38,5 +39,7 @@ export function compile(render: RenderFunc) {
     else {
       renderer.render(node).on(dom.window.document.body);
     }
+
+    isRendered(dom.window.document);
   })());
 }

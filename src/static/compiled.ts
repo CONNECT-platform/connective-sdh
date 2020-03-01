@@ -1,7 +1,7 @@
 import { JSDOM } from 'jsdom';
 import { writeFile } from 'rxline/fs';
 
-import { isReady } from './is-ready';
+import { isReady } from './lifecycle';
 
 
 export class Compiled {
@@ -11,7 +11,6 @@ export class Compiled {
     await this.ready;
     await isReady(this.dom.window.document.head);
     await isReady(this.dom.window.document.body);
-
     return true;
   }
 

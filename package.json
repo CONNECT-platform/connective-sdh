@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/CONNECT-platform/connective-sdh#readme",
   "dependencies": {
-    "@connectv/html": "0.0.14",
+    "@connectv/html": "0.0.15",
     "@types/jsdom": "^16.1.0",
     "@types/jsdom-global": "^3.0.2",
     "jsdom": "^16.2.0",

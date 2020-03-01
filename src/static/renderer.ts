@@ -3,7 +3,9 @@ import { ExtensibleRenderer, Component,
         InnerHTMLPlugin, 
         ComponentPlugin, 
         ExposePlugin, 
-        CheckCompInputsPlugin } from '@connectv/html';
+        CheckCompInputsPlugin, 
+        ExposeFunction,
+        ContextFunction} from '@connectv/html';
 
 import { Renderable, ComponentType } from './types';
 import { observablePlugins } from './observable';
@@ -28,3 +30,15 @@ export class StaticRenderer extends ExtensibleRenderer<Renderable, ComponentType
 
 
 export abstract class StaticComponent extends Component<Renderable, ComponentType> {}
+
+
+export type ComponentThis = {
+  expose: ExposeFunction;
+  context: ContextFunction;
+}
+
+
+export type SafeComponentThis = {
+  expose?: ExposeFunction;
+  context?: ContextFunction;
+}

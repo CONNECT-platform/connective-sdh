@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { ClassListFixed, PropertyPlugin, PluginPriority } from "@connectv/html";
 
-import { attachPromise } from '../is-ready';
+import { attachPromise, whenRendered } from '../lifecycle';
 
 
 export class ObservableClassPlugin<R, T> implements 
@@ -11,14 +11,16 @@ export class ObservableClassPlugin<R, T> implements
 
   setprop(prop: string, target: R | Observable<RawValue>, host: HTMLElement) {
     if (prop === 'class' && target instanceof Observable) {
-      attachPromise(host, target.toPromise().then(v => {
-        let classes = (v !== undefined) ? v.toString() : '';
-        const fixed = ClassListFixed.get(host);
-        if (fixed.length > 0)
-          classes += ' ' + fixed.join(' ');
-
-        host.setAttribute('class', classes);
-      }));
+      whenRendered(host, () => {
+        attachPromise(host, target.toPromise().then(v => {
+          let classes = (v !== undefined) ? v.toString() : '';
+          const fixed = ClassListFixed.get(host);
+          if (fixed.length > 0)
+            classes += ' ' + fixed.join(' ');
+  
+          host.setAttribute('class', classes);
+        }));
+      });
 
       return true;
     }

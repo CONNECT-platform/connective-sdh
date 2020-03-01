@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { PropertyPlugin, PluginPriority } from "@connectv/html";
 
-import { attachPromise } from '../is-ready';
+import { attachPromise, whenRendered } from '../lifecycle';
 
 
 export class ObservableInnerHTMLPlugin<R, T> implements 
@@ -11,9 +11,11 @@ export class ObservableInnerHTMLPlugin<R, T> implements
 
   setprop(prop: string, target: R | Observable<RawValue>, host: HTMLElement) {
     if (prop === '_innerHTML' && target instanceof Observable) {
-      attachPromise(host, target.toPromise().then(v => {
-        host.innerHTML = (v !== undefined)?v.toString():'';
-      }));
+      whenRendered(host, () => {
+        attachPromise(host, target.toPromise().then(v => {
+          host.innerHTML = (v !== undefined)?v.toString():'';
+        }));
+      });
 
       return true;
     }
