@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
-import { wrap, control, map, value, isPinLike } from '@connectv/core';
+import { Observable, from } from 'rxjs';
+import { wrap, value, isPinLike } from '@connectv/core';
 import { PluginPriority, ComponentSignature, CompPropPlugin } from '@connectv/html';
 
 
@@ -10,7 +10,7 @@ export class CompInputPinPlugin<R, T> implements CompPropPlugin<R, T> {
 
       if (prop instanceof Observable) wrap(prop).to(input);
       else if (isPinLike(prop)) prop.to(input);
-      else if (prop instanceof Promise) control().to(map((_, done) => prop.then(done))).to(input);
+      else if (prop instanceof Promise) wrap(from(prop)).to(input);
       else value(prop).to(input);
 
       return true;

@@ -18,27 +18,36 @@ export function promises(node: Node) {
 
 
 export async function isReady(node: Node) {
-  const _P = promises(node);
-  console.log(`>> waiting for ${_P.length} promises`);
-  await Promise.all(_P);
-  console.log('>> DONE!');
+  await Promise.all(promises(node));
   return true;
 }
 
 
-export function whenRendered(node: Node, cb: () => void) {
+interface WRCallback {
+  cb: () => void;
+  priority: number;
+}
+
+
+export const WRCallbackDefaultPriority = 0;
+export const WRCallbackHighPriority = 1000;
+
+
+export function whenRendered(node: Node, cb: () => void, priority = WRCallbackDefaultPriority) {
   if (node instanceof DocumentFragment) {
     let marker = getLSMarker(node);
     if (!marker)
       whenRendered(addLSMarker(node), cb);
   }
   else
-    ((node as any).__wr_callbacks = (node as any).__wr_callbacks || []).push(cb);
+    ((node as any).__wr_callbacks = (node as any).__wr_callbacks || []).push({cb, priority});
 }
 
 
 export function isRendered(node: Node) {
-  ((node as any).__wr_callbacks || []).forEach((cb: () => void) => cb());
+  ((node as any).__wr_callbacks || [])
+    .sort((a: WRCallback, b: WRCallback) => b.priority - a.priority)
+    .forEach((w: WRCallback) => w.cb());
   node.childNodes.forEach(isRendered);
 }
 

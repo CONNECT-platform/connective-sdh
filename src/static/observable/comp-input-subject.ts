@@ -12,7 +12,7 @@ export class CompInputSubjectPlugin<R, T> implements CompPropPlugin<R, T> {
       const input = signature.inputs[name] as Subject<any>;
 
       if (prop instanceof Observable) whenRendered(host, () => prop.subscribe(input));
-      else if (isPinLike(prop)) whenRendered(host, () => prop.observable.pipe(map(e => e.value)).subscribe(input));
+      else if (isPinLike(prop)) whenRendered(host, () => prop.subscribe(input));
       else if (prop instanceof Promise) whenRendered(host, () => from(prop).subscribe(input));
       else whenRendered(host, () => of(prop).subscribe(input));
 
