@@ -6,7 +6,7 @@ import { PropsType, CTX,
 } from '@connectv/html';
 import { Subscription } from 'rxjs';
 
-import { whenRendered, getLSMarker, WRCallbackHighPriority } from './lifecycle';
+import { whenRendered, getLSMarker, WRCallbackHighPriority } from '../shared/lifecycle';
 
 
 export class ContextPlugin<R, T> implements CompProcessPlugin<R, T> {

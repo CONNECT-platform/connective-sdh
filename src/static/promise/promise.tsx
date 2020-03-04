@@ -1,6 +1,6 @@
 import { PropertyPlugin, AppendPlugin, PluginPriority, Marker, RawRenderer } from '@connectv/html';
 
-import { attachPromise } from '../lifecycle';
+import { attachPromise } from '../../shared/lifecycle';
 
 
 export class PromisePlugin<R, T> implements 

@@ -1,7 +1,7 @@
 import { PinLike, isPinLike } from '@connectv/core';
 import { PropertyPlugin, PluginPriority } from "@connectv/html";
 
-import { attachPromise, whenRendered } from '../lifecycle';
+import { attachPromise, whenRendered } from '../../shared/lifecycle';
 
 
 export class PinInnerHTMLPlugin<R, T> implements 

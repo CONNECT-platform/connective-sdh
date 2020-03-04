@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 import { isPinLike } from '@connectv/core';
 import { PluginPriority, ComponentSignature, CompPropPlugin } from '@connectv/html';
 
-import { whenRendered } from '../lifecycle';
+import { whenRendered } from '../../shared/lifecycle';
 
 
 export class CompInputSubjectPlugin<R, T> implements CompPropPlugin<R, T> {

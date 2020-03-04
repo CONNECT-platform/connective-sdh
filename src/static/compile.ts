@@ -3,7 +3,7 @@ const registerGlobalDom = require('jsdom-global');
 
 import { StaticRenderer } from './renderer';
 import { Compiled } from './compiled';
-import { isRendered } from './lifecycle';
+import { itsRendered } from '../shared/lifecycle';
 
 
 export type RenderFunc = (
@@ -24,22 +24,29 @@ export function compile(render: RenderFunc) {
       dom.window.document
     );
 
+    const headNodes = <Node[]>[];
+    const bodyNodes = <Node[]>[];
+
     if (node instanceof HTMLHtmlElement) {
-      (node.firstChild as Node).childNodes.forEach(child => renderer.render(child).on(dom.window.document.head));
-      (node.lastChild as Node).childNodes.forEach(child => renderer.render(child).on(dom.window.document.body));
+      node.firstChild?.childNodes.forEach(n => headNodes.push(n));
+      node.lastChild?.childNodes.forEach(n => bodyNodes.push(n));
+
       // TODO: clean this up
       // TODO: set body attributes as well
     }
     else if (node instanceof HTMLHeadElement) {
-      node.childNodes.forEach(child => renderer.render(child).on(dom.window.document.head));
+      node.childNodes.forEach(n => headNodes.push(n));
     }
     else if (node instanceof HTMLBodyElement) {
-      node.childNodes.forEach(child => renderer.render(child).on(dom.window.document.body));
+      node.childNodes.forEach(n => bodyNodes.push(n));
     }
     else {
-      renderer.render(node).on(dom.window.document.body);
+      bodyNodes.push(node);
     }
 
-    isRendered(dom.window.document);
+    headNodes.forEach(node => renderer.render(node).on(dom.window.document.head));
+    bodyNodes.forEach(node => renderer.render(node).on(dom.window.document.body));
+
+    itsRendered(dom.window.document);
   })());
 }

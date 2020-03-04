@@ -3,7 +3,7 @@ import { isPinLike } from '@connectv/core';
 import { CompInputOptions, CompPropPlugin, PluginPriority, 
           ComponentSignature, CompInputWithOptions } from '@connectv/html';
 
-import { whenRendered } from '../lifecycle';
+import { whenRendered } from '../../shared/lifecycle';
 import { RecipientPromise, isRecipientPromise } from './recipient-promise';
 
 

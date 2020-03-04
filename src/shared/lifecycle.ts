@@ -44,11 +44,11 @@ export function whenRendered(node: Node, cb: () => void, priority = WRCallbackDe
 }
 
 
-export function isRendered(node: Node) {
+export function itsRendered(node: Node) {
   ((node as any).__wr_callbacks || [])
     .sort((a: WRCallback, b: WRCallback) => b.priority - a.priority)
     .forEach((w: WRCallback) => w.cb());
-  node.childNodes.forEach(isRendered);
+  node.childNodes.forEach(itsRendered);
 }
 
 

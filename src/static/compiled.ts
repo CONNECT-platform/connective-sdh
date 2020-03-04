@@ -1,7 +1,7 @@
 import { JSDOM } from 'jsdom';
 import { writeFile } from 'rxline/fs';
 
-import { isReady } from './lifecycle';
+import { isReady } from '../shared/lifecycle';
 
 
 export class Compiled {
