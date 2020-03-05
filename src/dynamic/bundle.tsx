@@ -5,6 +5,14 @@ import { StaticRenderer } from '../static';
 
 import { TransportInfo, fetchInfo } from './transport-info';
 import { createEntry } from './create-entry';
+import { CompType } from '@connectv/html';
+import { getCompTransportInfo } from './transport';
+
+
+export enum ProcessingMode {
+  ResolveOnly,
+  ResolveAndCollect,
+}
 
 
 export class Bundle {
@@ -12,18 +20,53 @@ export class Bundle {
   path: string;
   entryPath: string;
 
+  private repack: boolean = true;
+
   constructor(readonly url: string, path?: string) {
     this.imports = [];
     this.path = path || this.url;
   }
 
-  process() {
+  includes(info: TransportInfo) {
+    return this.imports.some(i => i === info || i.hash === info.hash);
+  }
+
+  add(info: TransportInfo) {
+    this.imports.push(info);
+    this.repack = true;
+    return this;
+  }
+
+  collect(): (document: HTMLDocument) => void;
+  collect(comp: CompType<any, any>, ...rest: CompType<any, any>[]): this;
+  collect(...comps: CompType<any, any>[]) {
+    comps.forEach(comp => {
+      const info = getCompTransportInfo(comp);
+      if (info) {
+        if (!this.includes(info)) this.add(info);
+      }
+    });
+
+    return comps.length == 0 ? this.process(ProcessingMode.ResolveAndCollect) : this;
+  }
+
+  resolve() { return this.process(ProcessingMode.ResolveOnly); }
+
+  process(mode: ProcessingMode) {
     const renderer = new StaticRenderer();
     return (document: HTMLDocument) => {
       renderer.render(<script src={this.url}></script>).on(document.head);
       fetchInfo(document).forEach(info => {
-        if (!this.imports.some(i => i === info || i.hash === info.hash))
-          this.imports.push(info);
+        if (!info.resolved) {
+          const included = this.includes(info);
+          if (included) {
+            info.resolved = true;
+          }
+          else if (mode === ProcessingMode.ResolveAndCollect) {
+            this.add(info);
+            info.resolved = true;
+          }
+        }
       });
     }
   }
@@ -38,6 +81,8 @@ export class Bundle {
   }
 
   async pack(path?: string) {
+    if (!this.repack) return;
+
     await this.bootstrap(path);
     const { dir, name, ext } = parse(this.path);
 

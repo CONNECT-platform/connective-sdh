@@ -36,10 +36,14 @@ ${normal.map(info => `  '${info.hash}': ${info.name}`).join(',\n')}
 };
 
 const renderer = new Renderer();
+const ogtransport = window.__sdh_transport;
 window.__sdh_transport = function(id, hash, props) {
-  const target = document.getElementById(id);
-  renderer.render(renderer.create(components[hash], props)).after(target);
-  target.remove();
+  if (hash in components) {
+    const target = document.getElementById(id);
+    renderer.render(renderer.create(components[hash], props)).after(target);
+    target.remove();
+  }
+  else if (ogtransport) ogtransport(id, hash, props);
 }
 `
   });

@@ -6,6 +6,7 @@ export interface TransportInfo {
   name: string;
   filename: string;
   hash: string;
+  resolved: boolean,
 }
 
 
@@ -16,7 +17,7 @@ function hash(x: string) {
 
 export function createInfo(name: string, trace: NodeJS.CallSite): TransportInfo {
   const filename = trace.getFileName() || '';
-  return { name, filename, hash: hash(filename + '::' + name) };
+  return { name, filename, hash: hash(filename + '::' + name), resolved: false };
 }
 
 

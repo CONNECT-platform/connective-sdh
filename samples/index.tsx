@@ -4,7 +4,7 @@ import { Context } from '@connectv/html';
 import { wrap, pipe } from '@connectv/core';
 
 import { compile } from '../src/static';
-import { Bundle } from '../src/dynamic/bundle';
+import { Bundle, ProcessingMode } from '../src/dynamic/bundle';
 
 import { $Hellow } from './comp';
 import { $Hellow2 } from './comp2';
@@ -15,7 +15,10 @@ const id = (x: any) => wrap(of(x)).to(pipe(delay(1000)));
 // const id = (x: any) => of(x).pipe(delay(1000));
 // const id = (x: any) => x;
 
-const bundle = new Bundle('./bundle.js');
+const bundleA = new Bundle('./bundleA.js');
+const bundleB = new Bundle('./bundleB.js');
+
+bundleA.collect($Hellow);
 
 compile(renderer =>
   <html>
@@ -25,16 +28,16 @@ compile(renderer =>
     <body>
       This is my stuff:
       <$Hellow name={id('World')}></$Hellow>
-      <$Hellow name={id('World')}></$Hellow>
+      <br/><hr/><br/>
       also
       <$Hellow2 name={id('Jack')}></$Hellow2>
     </body>
   </html>
 )
-.post(bundle.process())
-.serialize()
-.then(console.log)
-// .save('index.html', 'dist')
+.post(bundleA.resolve())
+.post(bundleB.collect())
+.save('index.html', 'dist')
 .then(() => {
-  bundle.pack('./dist/bundle.js');
+  bundleA.pack('./dist/bundleA.js');
+  bundleB.pack('./dist/bundleB.js');
 });
