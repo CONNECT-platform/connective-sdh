@@ -1,8 +1,8 @@
-import { CompType, PropsType, autoId } from '@connectv/html';
+import { CompType, autoId } from '@connectv/html';
 
 import { callTrace } from './trace';
 import { ComponentThis } from '../static';
-import { recipientPromise } from '../static/promise';
+import { recipientPromise } from '../static/promise/recipient-promise';
 
 import { createInfo, attachInfo, TransportInfo } from './transport-info';
 

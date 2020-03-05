@@ -1,24 +1,18 @@
-import { of  } from 'rxjs';
-import { delay, map as _map } from 'rxjs/operators';
-import { Context } from '@connectv/html';
-import { wrap, pipe } from '@connectv/core';
-
 import { compile } from '../src/static';
-import { Bundle, ProcessingMode } from '../src/dynamic/bundle';
+import { Bundle } from '../src/dynamic/bundle';
+import { save, load } from '../src/dynamic/presistence';
 
 import { $Hellow } from './comp';
 import { $Hellow2 } from './comp2';
 
 
-const id = (x: any) => wrap(of(x)).to(pipe(delay(1000)));
-// const id = (x: any) => new Promise(resolve => setTimeout(() => resolve(x), 1000));
-// const id = (x: any) => of(x).pipe(delay(1000));
-// const id = (x: any) => x;
+// const bundleA = new Bundle('./bundleA.js', './dist/bundleA.js');
+(async() => {
 
-const bundleA = new Bundle('./bundleA.js');
-const bundleB = new Bundle('./bundleB.js');
+const bundleA = await load('./dist/bundleA.js', './bundleA.js');
+const bundleB = new Bundle('./bundleB.js', './dist/bundleB.js');
 
-bundleA.collect($Hellow);
+// bundleA.collect($Hellow);
 
 compile(renderer =>
   <html>
@@ -27,17 +21,19 @@ compile(renderer =>
     </head>
     <body>
       This is my stuff:
-      <$Hellow name={id('World')}></$Hellow>
+      <$Hellow name='World'></$Hellow>
       <br/><hr/><br/>
       also
-      <$Hellow2 name={id('Jack')}></$Hellow2>
+      <$Hellow2 name='Jack'></$Hellow2>
     </body>
   </html>
 )
 .post(bundleA.resolve())
 .post(bundleB.collect())
 .save('index.html', 'dist')
-.then(() => {
-  bundleA.pack('./dist/bundleA.js');
-  bundleB.pack('./dist/bundleB.js');
+.then(async () => {
+  save(bundleA);
+  save(bundleB);
 });
+
+})();
