@@ -1,42 +1,41 @@
 import { CompType, PropsType, autoId } from '@connectv/html';
-import { createHash } from 'crypto';
 
 import { callTrace } from './trace';
+import { ComponentThis } from '../static';
+import { recipientPromise } from '../static/promise';
+
+import { createInfo, attachInfo } from './transport-info';
 
 
-export interface TransportInfo {
-  name: string;
-  filename: string;
-  hash: string;
-}
 
-
-function _hash(x: string) {
-  return createHash('md5').update(x).digest('base64').toString();
-}
-
-
-export function transport(component: CompType) {
+export function transport(component: CompType<any>) {
   const trace = callTrace();
   if (!trace) return component;   // --> unable to get trace info, perhaps client side code
 
-  const info = {
-    filename: trace.getFileName(),
-    name: component.name,
-    hash: _hash(trace.getFileName() + '::' + component.name),
-  }
+  const info = createInfo(component.name, trace);
 
-  return (props: PropsType<RawValue>, renderer: any) => {
+  return function(this: ComponentThis, props: PropsType<any>, renderer: any) {
     const id = autoId();
-    const script = 
-`(function(){
-  window.addEventListener("load", function(){
+    const script = <script id={id}>
+(function(){'{'}
+  window.addEventListener("load", function(){'{'}
     if (window.__sdh_transport)
-      window.__sdh_transport("${id}", "${info.hash}", ${JSON.stringify(props)});
+      window.__sdh_transport("{id}", "{info.hash}", {
+          Promise.all(
+            Object.keys(props).map(
+              async key => [key, await this.expose.in(key, recipientPromise<RawValue>())]
+            )
+          )
+          .then(entries => entries.reduce((obj, [key, value]) => {
+            obj[key as any] = value;
+            return obj;
+          }, {} as any))
+          .then(JSON.stringify)
+      });
   });
-})()`
-    const el = <script id={id}>{script}</script>;
-    (el as any).__transport_info = info;
-    return el;
+})()
+    </script>;
+    attachInfo(script, info);
+    return script;
   };
 }

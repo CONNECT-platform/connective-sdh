@@ -4,13 +4,23 @@ import { writeFile } from 'rxline/fs';
 import { isReady } from '../shared/lifecycle';
 
 
+export type PostProcessor = (html: HTMLDocument) => void | Promise<void>;
+
+
 export class Compiled {
+  private _postProcessors: PostProcessor[] = [];
+
   constructor(readonly dom: JSDOM, readonly ready: Promise<void>) {}
 
   async isReady() {
     await this.ready;
     await isReady(this.dom.window.document.head);
     await isReady(this.dom.window.document.body);
+
+    for (let processor of this._postProcessors) {
+      await processor(this.dom.window.document);
+    }
+
     return true;
   }
 
@@ -22,5 +32,10 @@ export class Compiled {
   async save(path: string, root?: string) {
     await this.isReady();
     return writeFile()({ path, root: root || '',  content: this.dom.serialize() });
+  }
+
+  post(processor: PostProcessor) {
+    this._postProcessors.push(processor);
+    return this;
   }
 }
