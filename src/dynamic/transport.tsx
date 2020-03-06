@@ -27,10 +27,6 @@ export function transport(component: CompType<any, any>) {
 
   const info = createInfo(component.name, trace);
 
-  //
-  // TODO: extend functionality so it can be used to also replace some other statically
-  //       rendered elements of the page.
-  //
   const comp = function(this: ComponentThis, props: any, renderer: any) {
     const id = props._transport || transportRef();
     const script = <script id={id}>
