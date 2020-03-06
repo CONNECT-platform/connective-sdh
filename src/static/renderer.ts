@@ -12,6 +12,7 @@ import { observablePlugins } from './observable';
 import { pinPlugins } from './pin';
 import { promisePlugins } from './promise';
 import { ContextPlugin } from './context';
+import { TransportPlugin } from './transport';
 
 
 export class StaticRenderer extends ExtensibleRenderer<Renderable, ComponentType> {
@@ -20,6 +21,7 @@ export class StaticRenderer extends ExtensibleRenderer<Renderable, ComponentType
       new RefPlugin<Renderable, ComponentType>(),
       new InnerHTMLPlugin<Renderable, ComponentType>(),
       new ComponentPlugin<Renderable, ComponentType>(),
+      new TransportPlugin<Renderable, ComponentType>(),
       new ExposePlugin<Renderable, ComponentType>(),
       new CheckCompInputsPlugin<Renderable, ComponentType>(),
       new ContextPlugin<Renderable, ComponentType>(),

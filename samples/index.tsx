@@ -3,15 +3,22 @@ import { Bundle } from '../src/dynamic/bundle';
 import { save, load } from '../src/dynamic/presistence';
 
 import { $Hellow } from './comp';
-import { $Hellow2 } from './comp2';
+import { SDHellow } from './comp2';
 
 
+// --> this builds bundleA. it is commented because bundleA is already
+// --> built and we want to load it (uncomment it if you need to build it).
 // const bundleA = new Bundle('./bundleA.js', './dist/bundleA.js');
 (async() => {
 
+// --> comment this line if you need to build bundleA.
 const bundleA = await load('./dist/bundleA.js', './bundleA.js');
+
 const bundleB = new Bundle('./bundleB.js', './dist/bundleB.js');
 
+// --> this is commented because we are pre-loading bundleA.
+// --> uncomment it in case you need to build it.
+// const bundleA = new Bundle('./bundleA.js', './dist/bundleA.js');
 // bundleA.collect($Hellow);
 
 compile(renderer =>
@@ -21,10 +28,10 @@ compile(renderer =>
     </head>
     <body>
       This is my stuff:
-      <$Hellow name='World'></$Hellow>
+      <$Hellow name='World'/>
       <br/><hr/><br/>
       also
-      <$Hellow2 name='Jack'></$Hellow2>
+      <SDHellow name='Jack'/>
     </body>
   </html>
 )

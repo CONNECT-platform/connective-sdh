@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { isPinLike } from '@connectv/core';
-import { CompInputOptions, CompPropPlugin, PluginPriority, 
-          ComponentSignature, CompInputWithOptions } from '@connectv/html';
+import { CompPropPlugin, PluginPriority, 
+          ComponentSignature } from '@connectv/html';
 
 import { whenRendered } from '../../shared/lifecycle';
 import { RecipientPromise, isRecipientPromise } from './recipient-promise';

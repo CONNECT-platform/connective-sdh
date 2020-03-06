@@ -18,21 +18,28 @@ export function attachCompTransportInfo(component: CompType<any, any>, info: Tra
 }
 
 
+export function transportRef() { return autoId(); }
+
+
 export function transport(component: CompType<any, any>) {
   const trace = callTrace();
   if (!trace) return component;   // --> unable to get trace info, perhaps client side code
 
   const info = createInfo(component.name, trace);
 
+  //
+  // TODO: extend functionality so it can be used to also replace some other statically
+  //       rendered elements of the page.
+  //
   const comp = function(this: ComponentThis, props: any, renderer: any) {
-    const id = autoId();
+    const id = props._transport || transportRef();
     const script = <script id={id}>
 (function(){'{'}
   window.addEventListener("load", function(){'{'}
-    if (window.__sdh_transport)
+    if (window.__sdh_transport){'{'}
       window.__sdh_transport("{id}", "{info.hash}", {
           Promise.all(
-            Object.keys(props).map(
+            Object.keys(props).filter(key => key !== '_transport').map(
               async key => [key, await this.expose.in(key, recipientPromise<RawValue>())]
             )
           )
@@ -42,6 +49,12 @@ export function transport(component: CompType<any, any>) {
           }, {} as any))
           .then(JSON.stringify)
       });
+      {
+        props._transport?
+        `document.querySelectorAll('[data-transport="${props._transport}"]').forEach(function(node){node.remove()});`
+        :''
+      }
+    }
   });
 })()
     </script>;
