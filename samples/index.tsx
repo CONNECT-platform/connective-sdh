@@ -27,7 +27,7 @@ compile(renderer =>
     <head>
       <title>TEST!</title>
     </head>
-    <body>
+    <body class="whatev">
       This is my stuff:
       <$Hellow name='World'/>
       <br/><hr/><br/>

@@ -12,6 +12,28 @@ export type RenderFunc = (
   ) => Node | Promise<Node>;
 
 
+function _render(el: Node | Node[] | null, target: HTMLElement, renderer: StaticRenderer) {
+  if (!el) return;
+
+  let nodes = <Node[]>[];
+  if (el instanceof HTMLElement) el.childNodes.forEach(n => nodes.push(n));
+  else if (el instanceof Node) return;
+  else nodes = el;
+
+  nodes.forEach(n => renderer.render(n).on(target));
+}
+
+
+function _copy_attrs(el: Node | null, target: HTMLElement) {
+  if (!el || !(el instanceof HTMLElement)) return;
+
+  for (let i = 0; i < el.attributes.length; i++) {
+    const attr = el.attributes.item(i);
+    if (attr) target.setAttribute(attr.name, attr.value);
+  }
+}
+
+
 export function compile(render: RenderFunc) {
   try { document } catch(_) { registerGlobalDom(); }
 
@@ -24,28 +46,21 @@ export function compile(render: RenderFunc) {
       dom.window.document
     );
 
-    const headNodes = <Node[]>[];
-    const bodyNodes = <Node[]>[];
-
     if (node instanceof HTMLHtmlElement) {
-      node.firstChild?.childNodes.forEach(n => headNodes.push(n));
-      node.lastChild?.childNodes.forEach(n => bodyNodes.push(n));
-
-      // TODO: clean this up
-      // TODO: set body attributes as well
+      _render(node.firstChild, dom.window.document.head, renderer);
+      _render(node.lastChild, dom.window.document.body, renderer);
+      _copy_attrs(node.lastChild, dom.window.document.body);
     }
     else if (node instanceof HTMLHeadElement) {
-      node.childNodes.forEach(n => headNodes.push(n));
+      _render(node, dom.window.document.head, renderer);
     }
     else if (node instanceof HTMLBodyElement) {
-      node.childNodes.forEach(n => bodyNodes.push(n));
+      _render(node, dom.window.document.body, renderer);
+      _copy_attrs(node, dom.window.document.body);
     }
     else {
-      bodyNodes.push(node);
+      _render([node], dom.window.document.body, renderer);
     }
-
-    headNodes.forEach(node => renderer.render(node).on(dom.window.document.head));
-    bodyNodes.forEach(node => renderer.render(node).on(dom.window.document.body));
 
     itsRendered(dom.window.document);
   })());

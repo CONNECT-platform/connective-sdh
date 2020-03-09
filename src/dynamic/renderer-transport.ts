@@ -1,10 +1,10 @@
-import { RawRenderer } from '@connectv/html';
+import { RendererLike } from '@connectv/html';
 
 import { callTrace } from './trace';
 import { createInfo } from './transport-info';
 
 
-export type RendererFactory<R, T> = () => RawRenderer<R, T>;
+export type RendererFactory<R, T> = () => RendererLike<R, T>;
 
 export function rendererTransport<R, T>(factory: RendererFactory<R, T>) {
   const trace = callTrace();
