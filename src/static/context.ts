@@ -29,17 +29,19 @@ export class ContextPlugin<R, T> implements CompProcessPlugin<R, T> {
         const sub = new Subscription();
         const _ctxPlugins = pluginHost.plugins.filter(isCompContextPlugin);
 
-        whenRendered(node, () => {
-          let _ref = node;
-          if (node instanceof DocumentFragment) _ref = getLSMarker(node);
+        if (Object.keys(map).length > 0) {
+          whenRendered(node, () => {
+            let _ref = node;
+            if (node instanceof DocumentFragment) _ref = getLSMarker(node);
 
-          const ctx = CTX.resolve(_ref, Object.keys(map));
-          Object.entries(map).forEach(([key, recipient]) => {
-            const value = ctx[key];
-            if (!_ctxPlugins.find(p => p.wireContext(key, value, recipient, sub, _ref, pluginHost)))
-              throw new UnhandledComponentContextError(key, recipient, value);
-          });
-        }, WRCallbackHighPriority);
+            const ctx = CTX.resolve(_ref, Object.keys(map));
+            Object.entries(map).forEach(([key, recipient]) => {
+              const value = ctx[key];
+              if (!_ctxPlugins.find(p => p.wireContext(key, value, recipient, sub, _ref, pluginHost)))
+                throw new UnhandledComponentContextError(key, recipient, value);
+            });
+          }, WRCallbackHighPriority);
+        }
       }
     }
 

@@ -5,7 +5,7 @@ import { hi } from './somecode';
 
 
 // Static view part:
-const _Hi = ({name, count}: any, renderer: any)  => <span>{hi()} {name}!!! [{count}]</span>
+const _Hi = ({name, count}: any, renderer: any)  => <fragment>{hi()} {name}!!! [{count}]</fragment>
 
 // Client-Side component:
 export function Hellow({name}: any, renderer: any) {
@@ -15,7 +15,7 @@ export function Hellow({name}: any, renderer: any) {
 }
 
 // Transport component:
-export const $Hellow2 = transport(Hellow);
+export const $Hellow = transport(Hellow);
 
 // Server-Side component:
 export function SHellow({name}: any, renderer: any) {
@@ -28,6 +28,6 @@ export function SDHellow({name}: any, renderer: any) {
 
   return <fragment>
     <SHellow name={name} _transport={tr}/>
-    <$Hellow2 name={name} _transport={tr}/>
+    <$Hellow name={name} _transport={tr}/>
   </fragment>
 }
