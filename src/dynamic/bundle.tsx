@@ -4,12 +4,14 @@ import { StaticRenderer } from '../static';
 
 import { TransportInfo, fetchInfo } from './transport-info';
 import { getCompTransportInfo } from './transport';
+import { RendererFactory, getRendererTransportInfo } from './renderer-transport';
 
 
 export enum ProcessingMode { ResolveOnly, ResolveAndCollect }
 
 export class Bundle {
   imports: TransportInfo[];
+  rendererImport: TransportInfo | undefined;
   path: string;
   repack: boolean = true;
 
@@ -53,5 +55,10 @@ export class Bundle {
         }
       });
     }
+  }
+
+  withRenderer<R, T>(factory: RendererFactory<R, T>) {
+    this.rendererImport = getRendererTransportInfo(factory) || this.rendererImport;
+    return this;
   }
 }
