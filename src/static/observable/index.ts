@@ -14,3 +14,9 @@ export function observablePlugins<R, T>() {
     new CompContextSubjectPlugin<R, T>(),
   ]
 }
+
+export {
+  ObservablePlugin, ObservableInnerHTMLPlugin,
+  ObservableClassPlugin, CompInputSubjectPlugin,
+  CompContextSubjectPlugin,
+}

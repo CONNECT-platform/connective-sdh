@@ -17,3 +17,7 @@ export function pinPlugins<R, T>() {
     new DefaultPinLikeRecipientPlugin<R, T>(),
   ]
 }
+
+export {
+  PinPlugin, PinInnerHTMLPlugin, PinClassPlugin, CompInputPinPlugin, CompContextPinPlugin,
+}

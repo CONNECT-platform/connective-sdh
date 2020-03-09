@@ -19,3 +19,8 @@ export function promisePlugins<R, T>() {
 
 
 export { RecipientPromise, isRecipientPromise, recipientPromise } from './recipient-promise';
+export {
+  PromisePlugin, PromiseInnerHTMLPlugin, PromiseClassPlugin,
+  CompInputPromisePlugin, DefaultPromiseRecipientPlugin,
+  CompContextPromisePlugin,
+}

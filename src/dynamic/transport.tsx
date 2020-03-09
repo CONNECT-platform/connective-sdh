@@ -1,6 +1,6 @@
 import { CompType, autoId } from '@connectv/html';
 
-import { callTrace } from './trace';
+import { callTrace } from '../shared/trace';
 import { ComponentThis } from '../static';
 import { recipientPromise } from '../static/promise/recipient-promise';
 
