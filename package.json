@@ -1,11 +1,20 @@
 {
-  "name": "connective-sdh",
+  "name": "@connectv/sdh",
   "version": "0.0.1",
   "description": "Library for Static (Server-side) and Dynamic (Client-side) HTML rendering",
-  "main": "index.js",
+  "main": "dist/es5/index.js",
+  "module": "dist/es6/index.js",
+  "types": "dist/es6/index.d.ts",
+  "files": [
+    "dist/es6",
+    "dist/es5"
+  ],
   "scripts": {
     "start": "ts-node ./samples/index.tsx",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-es5": "tsc -p conf/typescript/es5.json",
+    "build-es6": "tsc -p conf/typescript/es6.json",
+    "build": "npm run build-es5 && npm run build-es6"
   },
   "repository": {
     "type": "git",
