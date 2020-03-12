@@ -6,6 +6,12 @@ import { Compiled } from './compiled';
 import { itsRendered } from '../shared/lifecycle';
 
 
+/**
+ * 
+ * Denotes a function that renders some HTML content (in form of an HTML Node)
+ * using given renderer and document objects.
+ * 
+ */
 export type RenderFunc = (
     renderer: StaticRenderer, 
     document: Document,
@@ -34,6 +40,15 @@ function _copy_attrs(el: Node | null, target: HTMLElement) {
 }
 
 
+/**
+ * 
+ * Will create a `Compiled` object from given render function. A render function
+ * is any function that returns an HTML Node (or a promise of one), given the proper
+ * renderer and document objects.
+ * 
+ * @param render the render function
+ * 
+ */
 export function compile(render: RenderFunc) {
   try { document } catch(_) { registerGlobalDom(); }
 
