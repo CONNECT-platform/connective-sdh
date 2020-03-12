@@ -1,6 +1,4 @@
-import { compile } from '../src/static';
-import { Bundle } from '../src/dynamic/bundle';
-import { save, load } from '../src/dynamic/presistence';
+import { save, load, Bundle, compile } from '../src';
 
 import { $Hellow } from './comp';
 import { SDHellow } from './comp2';
