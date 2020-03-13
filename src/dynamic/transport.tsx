@@ -7,23 +7,92 @@ import { recipientPromise } from '../static/promise/recipient-promise';
 import { createInfo, attachInfo, TransportInfo } from './transport-info';
 
 
-
+/**
+ *
+ * @param component
+ * @returns all attached `TransportInfo` on the given component, if any.
+ *
+ */
 export function getCompTransportInfo(component: CompType<any, any>) {
   return (component as any).__transport_info;
 }
 
 
+/**
+ *
+ * Attaches given `TransportInfo` on given component.
+ *
+ * @param component
+ * @param info
+ *
+ */
 export function attachCompTransportInfo(component: CompType<any, any>, info: TransportInfo) {
   (component as any).__transport_info = { ...info, resolved: false };
 }
 
 
+/**
+ *
+ * Creates a _transport reference_. A _transport reference_ can be used to conduct
+ * **broad transport**, i.e. you can have the content that is supposed to be rendered
+ * on the client side also replace some server-side-rendered content:
+ *
+ * ```tsx
+ * function myComp(_, renderer) {
+ *   const tr = transportRef();
+ * 
+ *   return <fragment>
+ *     <StaticComponent _transport={tr}/>       // --> rendered on server-side
+ *     <div data-transport={tr}/>               // --> rendered on server-side
+ *     <TransportComponent _transport={tr}/>    // --> rendered on client-side, replaces the others.
+ *   </fragment>
+ * }
+ * ```
+ * 
+ * @returns a _transport reference_
+ * 
+ *
+ */
 export function transportRef() { return autoId(); }
 
 
+/**
+ *
+ * Creates a transport component based on given (original) component.
+ * On the server-side, the transport component ensures _CLIENT-SIDE_ rendering
+ * of original component on the same spot in the DOM tree with same properties.
+ * On the client-side, the transport component is identical to the original component.
+ *
+ * example:
+ * 
+ * ```tsx
+ * import { state } from '@connectv/core';
+ * import { transport } from '@connectv/sdh';
+ * 
+ * export function Counter(_, renderer) {
+ *   const count = state(0);
+ *   return <div onclick={() => count.value++}>You clicked {count} times!</div>;
+ * }
+ *
+ * export const $Counter = transport(Counter);
+ * ```
+ *
+ * In this example, you cannot use `Counter` component on server-side rendering since it needs
+ * to bind to user clicks (trying to render it actually results in an error). However, you can
+ * utilize `$Counter` instead, and it will ensure that `Counter` is rendered on the same locations
+ * on the DOM tree that you rendered `$Counter` on, on the client-side.
+ *
+ * @note You MUST export both the original component and the transport component, from the same file.
+ * This is how the original component is then imported (alongside with any possible dependencies)
+ * into client bundles.
+ *
+ * @note Any properties passed to the transport component will be used in rendering of the original
+ * component. However, you CANNOT pass any child elements to the transport component.
+ *
+ */
 export function transport(component: CompType<any, any>) {
   const trace = callTrace();
-  if (!trace) return component;   // --> unable to get trace info, perhaps client side code
+  if (!trace) return component;   // --> unable to get trace info, perhaps running on client.
 
   const info = createInfo(component.name, trace);
 
