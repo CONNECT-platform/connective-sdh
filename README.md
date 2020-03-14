@@ -34,7 +34,7 @@ export function Card({ title, text }, renderer) {
 }
 ```
 ```tsx
-// index.tsx
+// main.tsx
 
 import { compile } from '@connectv/sdh';
 import { Card } from './card';
@@ -46,6 +46,8 @@ compile(renderer =>
   </fragment>
 ).save('index.html');
 ```
+
+[► TRY IT!](https://repl.it/@eugene_gh/SDH-Hellow-World-Comp)
 
 ### Example: Interactive content
 
@@ -63,7 +65,7 @@ export function Counter(_, renderer) {
 export const $Counter = transport(Counter); // --> ensures rendering on client-side
 ```
 ```tsx
-// index.tsx
+// main.tsx
 
 import { compile, save, Bundle } from '@connectv/sdh';
 import { $Counter } from './counter';
