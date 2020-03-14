@@ -19,6 +19,7 @@ compile(renderer =>
   </html>
 ).save('index.html');
 ```
+[► TRY IT!](https://repl.it/@eugene_gh/SDH-Hellow-World)
 
 ### Example: Static HTML using Components
 
