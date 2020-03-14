@@ -1,11 +1,118 @@
 ![repo banner](https://raw.githubusercontent.com/CONNECT-platform/connective-sdh/master/repo-banner.svg?sanitize=true)
 
 
-**CONNECTIVE SDH** allows you to create webapps with server-side (static) and client-side (dynamic) rendering using JSX and [**CONNECTIVE HTML**](https://github.com/CONNECT-platform/connective-html).
+Easily build [JAMStack](https://jamstack.org) websites or server-run web-apps, using the same components and toolset for rendering the static content (server-side-rendered or prerendered) and dynamic content (client-side interactive/dynamic content).
 
-Features:
-- Fast SSR: pre-render or directly respond to requests
-- JSX-based simple component syntax for reusability
-- Transport components: mark components that are to be rendered on client-side for interactivity and they will be rendered on client side instead
-- Automatic bundling of transport components code
+### Example: Static HTML
+
+```tsx
+import { compile } from '@connectv/sdh';
+
+compile(renderer => 
+  <html>
+    <head>
+      <title>Hellow World Example</title>
+    </head>
+    <body>
+      <h1>Hellow World!</h1>
+    </body>
+  </html>
+).save('index.html');
+```
+
+### Example: Static HTML using Components
+
+```tsx
+// card.tsx
+
+export function Card({ title, text }, renderer) {
+  return <div class="card">
+      <h2>{title}</h2>
+      <p>{text}</p>
+  </div>
+}
+```
+```tsx
+// index.tsx
+
+import { compile } from '@connectv/sdh';
+import { Card } from './card';
+
+compile(renderer => 
+  <fragment>
+    <h1>List of stuff</h1>
+    <Card title='Carrots' text='they are pretty good for you.'/>
+  </fragment>
+).save('index.html');
+```
+
+### Example: Interactive content
+
+```tsx
+// counter.tsx
+
+import { state } from '@connectv/core';
+import { transport } from '@connectv/sdh';
+
+export function Counter(_, renderer) {
+  const count = state(0);
+  return <div onclick={() => count.value++}>You have clicked {count} times!</div>
+}
+
+export const $Counter = transport(Counter); // --> ensures rendering on client-side
+```
+```tsx
+// index.tsx
+
+import { compile, save, Bundle } from '@connectv/sdh';
+import { $Counter } from './counter';
+
+const bundle = new Bundle('./bundle.js');  // --> a bundle to ship client-side code
+
+compile(renderer =>
+  <fragment>
+    <p>
+      So this content will be prerendered, but the following component will be
+      rendered on the client side.
+    </p>
+    <$Counter/>
+  </fragment>
+)
+.post(bundle.collect())                    // --> collect all necessary dependencies in the bundle
+.save('index.html');
+
+save(bundle);                              // --> build the bundle and store it on fs
+```
+
+# Installation
+
+```bash
+npm i @connectv/sdh
+```
+
+NodeJS does not support JSX/TSX syntax on its own, so for enabling that you would need to use a transpiler such as
+Typescript or Babel. You should then configure your transpiler to use `renderer.create` as its JSX factory:
+
+#### For Typescript:
+Add this to your `tsconfig.json` file:
+```json
+"compilerOptions": {
+    "jsx": "react",
+    "jsxFactory": "renderer.create"
+}
+```
+
+#### For Babel ([plugin-transform-react-jsx](https://babeljs.io/docs/en/babel-plugin-transform-react-jsx)):
+Add this to your Babel config:
+```json
+{
+  "plugins": [
+    ["@babel/plugin-transform-react-jsx", {
+      "pragma": "renderer.create"
+    }]
+  ]
+}
+```
+
+
 
