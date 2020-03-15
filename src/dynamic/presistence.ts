@@ -1,3 +1,5 @@
+import { Configuration } from 'webpack';
+
 import { Bundle } from './bundle';
 import { pack } from './pack';
 import { saveMeta, loadMeta } from './meta';
@@ -8,17 +10,7 @@ import { saveMeta, loadMeta } from './meta';
  * Packs and stores given bundle on the file system.
  * Also stores corresponding metadata alongside the bundle.
  *
- * This function uses **Webpack** with default configurations.
- * For using custom configurations, you can instead do the following:
- * 
- * ```typescript
- * async function mySaveBundle(bundle: Bundle) {
- *   await pack(bundle, myConfiguration);
- *   await saveMeta(bundle);
- * }
- * ```
- *
- * Similarly for using your custom programmatic bundler instead of webpack,
+ * For using your custom programmatic bundler instead of webpack,
  * you can do the following:
  * 
  * ```typescript
@@ -29,11 +21,12 @@ import { saveMeta, loadMeta } from './meta';
  * ```
  *
  * @param bundle
+ * @param config web-pack configuration override
  * @returns the given bundle after the process is finished.
  *
  */
-export async function saveBundle(bundle: Bundle) {
-  await pack(bundle);
+export async function saveBundle(bundle: Bundle, config?: Configuration) {
+  await pack(bundle, config);
   await saveMeta(bundle);
 
   return bundle;
