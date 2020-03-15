@@ -55,7 +55,7 @@ compile(renderer =>
 // counter.tsx
 
 import { state } from '@connectv/core';
-import { transport } from '@connectv/sdh';
+import { transport } from '@connectv/sdh/transport';
 
 export function Counter(_, renderer) {
   const count = state(0);
@@ -83,9 +83,8 @@ compile(renderer =>
 )
 .post(bundle.collect())                    // --> collect all necessary dependencies in the bundle
 .save('dist/index.html')
-.then(() => {
-  save(bundle);                            // --> build the bundle and store it on fs
-});
+.then(() => save(bundle))                  // --> build the bundle and store it on fs
+
 ```
 
 # Installation
