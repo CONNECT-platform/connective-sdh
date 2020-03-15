@@ -19,6 +19,7 @@ compile(renderer =>
   </html>
 ).save('dist/index.html');
 ```
+[► TRY IT!](https://codesandbox.io/s/connective-sdh-hellow-world-deom3)
 
 ### Example: Static HTML using Components
 
@@ -45,6 +46,7 @@ compile(renderer =>
   </fragment>
 ).save('dist/index.html');
 ```
+[► TRY IT!](https://codesandbox.io/s/connective-sdh-static-components-r3b8i)
 
 ### Example: Interactive content
 
@@ -83,6 +85,7 @@ compile(renderer =>
 .then(() => save(bundle))                  // --> build the bundle and store it on fs
 
 ```
+[► TRY IT!](https://codesandbox.io/s/connective-sdh-9k53z)
 
 # Installation
 
