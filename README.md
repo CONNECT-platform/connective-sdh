@@ -19,7 +19,6 @@ compile(renderer =>
   </html>
 ).save('dist/index.html');
 ```
-[► TRY IT!](https://repl.it/@eugene_gh/SDH-Hellow-World)
 
 ### Example: Static HTML using Components
 
@@ -46,8 +45,6 @@ compile(renderer =>
   </fragment>
 ).save('dist/index.html');
 ```
-
-[► TRY IT!](https://repl.it/@eugene_gh/SDH-Hellow-World-Comp)
 
 ### Example: Interactive content
 
