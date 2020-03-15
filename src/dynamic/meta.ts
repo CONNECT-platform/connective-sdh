@@ -2,7 +2,7 @@ import { parse, join } from 'path';
 import { writeFile, readFile } from 'rxline/fs';
 
 import { Bundle } from './bundle';
-import { TransportInfo } from './transport-info';
+import { TransportInfo } from './transport/transport-info';
 
 
 /**

@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { getLSMarker } from '../shared/lifecycle';
+import { getLSMarker } from '../../shared/lifecycle';
 
 
 /**

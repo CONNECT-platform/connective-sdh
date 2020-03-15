@@ -40,7 +40,14 @@ export async function webPack(inpath: string, outpath: string, config: Configura
   return new Promise((resolve, reject) => {
     webpack(conf, (err, res) => {
       if (err) reject(err);
-      else resolve(res);
+      else {
+        if (res.hasErrors()) {
+          console.log(res.toString());
+          reject(res);
+        }
+        else
+          resolve(res);
+      }
     });
   });
 }

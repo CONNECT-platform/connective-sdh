@@ -2,9 +2,9 @@ import { CompType } from '@connectv/html';
 
 import { StaticRenderer } from '../static';
 
-import { TransportInfo, fetchInfo } from './transport-info';
-import { getCompTransportInfo } from './transport';
-import { RendererFactory, getRendererTransportInfo } from './renderer-transport';
+import { TransportInfo, fetchInfo } from './transport/transport-info';
+import { getCompTransportInfo } from './transport/transport';
+import { RendererFactory, getRendererTransportInfo } from './transport/renderer-transport';
 
 
 /**

@@ -1,8 +1,8 @@
 import { CompType, autoId } from '@connectv/html';
 
-import { callTrace } from '../shared/trace';
-import { ComponentThis } from '../static';
-import { recipientPromise } from '../static/promise/recipient-promise';
+import { callTrace } from '../../shared/trace';
+import { ComponentThis } from '../../static';
+import { recipientPromise } from '../../static/promise/recipient-promise';
 
 import { createInfo, attachInfo, TransportInfo } from './transport-info';
 
@@ -67,7 +67,7 @@ export function transportRef() { return autoId(); }
  * 
  * ```tsx
  * import { state } from '@connectv/core';
- * import { transport } from '@connectv/sdh';
+ * import { transport } from '@connectv/sdh/transport';
  * 
  * export function Counter(_, renderer) {
  *   const count = state(0);

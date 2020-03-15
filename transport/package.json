@@ -1,0 +1,5 @@
+{
+  "main": "../dist/es5/dynamic/transport/index.js",
+  "module": "../dist/es6/dynamic/transport/index.js",
+  "types": "../dist/es6/dynamic/transport/index.d.ts"
+}

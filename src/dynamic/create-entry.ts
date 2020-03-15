@@ -1,6 +1,6 @@
 import { writeFile } from 'rxline/fs';
 
-import { TransportInfo } from './transport-info';
+import { TransportInfo } from './transport/transport-info';
 
 
 interface NormalizedTransportInfo extends TransportInfo {

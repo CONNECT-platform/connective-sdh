@@ -1,6 +1,6 @@
 import { RendererLike } from '@connectv/html';
 
-import { callTrace } from '../shared/trace';
+import { callTrace } from '../../shared/trace';
 import { createInfo } from './transport-info';
 
 
