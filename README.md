@@ -82,9 +82,10 @@ compile(renderer =>
   </fragment>
 )
 .post(bundle.collect())                    // --> collect all necessary dependencies in the bundle
-.save('index.html');
-
-save(bundle);                              // --> build the bundle and store it on fs
+.save('index.html')
+.then(() => {
+  save(bundle);                            // --> build the bundle and store it on fs
+});
 ```
 
 # Installation
