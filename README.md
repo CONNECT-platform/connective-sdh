@@ -17,7 +17,7 @@ compile(renderer =>
       <h1>Hellow World!</h1>
     </body>
   </html>
-).save('index.html');
+).save('dist/index.html');
 ```
 [► TRY IT!](https://repl.it/@eugene_gh/SDH-Hellow-World)
 
@@ -44,7 +44,7 @@ compile(renderer =>
     <h1>List of stuff</h1>
     <Card title='Carrots' text='they are pretty good for you.'/>
   </fragment>
-).save('index.html');
+).save('dist/index.html');
 ```
 
 [► TRY IT!](https://repl.it/@eugene_gh/SDH-Hellow-World-Comp)
@@ -70,7 +70,7 @@ export const $Counter = transport(Counter); // --> ensures rendering on client-s
 import { compile, save, Bundle } from '@connectv/sdh';
 import { $Counter } from './counter';
 
-const bundle = new Bundle('./bundle.js');  // --> a bundle to ship client-side code
+const bundle = new Bundle('./bundle.js', 'dist/bundle.js');
 
 compile(renderer =>
   <fragment>
@@ -82,7 +82,7 @@ compile(renderer =>
   </fragment>
 )
 .post(bundle.collect())                    // --> collect all necessary dependencies in the bundle
-.save('index.html')
+.save('dist/index.html')
 .then(() => {
   save(bundle);                            // --> build the bundle and store it on fs
 });
