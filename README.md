@@ -63,15 +63,29 @@ compile(renderer =>
 ```tsx
 // counter.tsx
 
-import { state } from '@connectv/core';
-import { transport } from '@connectv/sdh/transport';
+import { state } from "@connectv/core";
+import { transport } from "@connectv/sdh/transport";
+
+const style = `
+  border-radius: 3px;
+  background: #424242;
+  cursor: pointer;
+  padding: 8px;
+  color: white;
+  display: inline-block;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .12);
+`;
 
 export function Counter(_, renderer) {
   const count = state(0);
-  return <div onclick={() => count.value++}>You have clicked {count} times!</div>
+  return (
+    <div style={style} onclick={() => count.value++}>
+      You have clicked {count} times!
+    </div>
+  );
 }
 
-export const $Counter = transport(Counter); // --> ensures rendering on client-side
+export const $Counter = transport(Counter); // --> transports `Counter` to client-side
 ```
 ```tsx
 // main.tsx
