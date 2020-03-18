@@ -36,7 +36,7 @@ const style = `
 `;
 
 export function Card({ title, text }, renderer) {
-  return <div class="card" style={style}>
+  return <div style={style}>
       <h2>{title}</h2>
       <p>{text}</p>
     </div>
