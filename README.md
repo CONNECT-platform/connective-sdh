@@ -27,12 +27,22 @@ compile(renderer =>
 ```tsx
 // card.tsx
 
+const style = `
+  display: inline-block;
+  vertical-align: top;
+  padding: 8px;
+  border-radius: 8px;
+  margin: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .2);
+`;
+
 export function Card({ title, text }, renderer) {
-  return <div class="card">
+  return <div class="card" style={style}>
       <h2>{title}</h2>
       <p>{text}</p>
-  </div>
+    </div>
 }
+
 ```
 ```tsx
 // main.tsx
