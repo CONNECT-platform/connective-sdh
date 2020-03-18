@@ -45,7 +45,11 @@ export async function saveBundle(bundle: Bundle, config?: Configuration) {
  */
 export async function loadBundle(path: string, url?: string) {
   const bundle = new Bundle(url || path, path);
-  bundle.imports = await loadMeta(bundle);
+  const meta = await loadMeta(bundle);
+
+  bundle.imports = meta.components;
+  bundle.rendererImport = meta.renderer;
+  bundle.initImports = meta.init;
   bundle.repack = false;
 
   return bundle;

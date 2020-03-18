@@ -37,7 +37,7 @@ export interface TransportInfo {
    * bundle.
    *
    */
-  resolved: boolean,
+  resolved?: boolean,
 }
 
 
@@ -91,5 +91,20 @@ export function fetchInfo(node: Node): TransportInfo[] {
     node.childNodes.forEach(child => res = res.concat(fetchInfo(child)));
 
     return res;
+  }
+}
+
+
+/**
+ *
+ * @param info
+ * @returns a lean version of the transport info, omitting runtime-data.
+ *
+ */
+export function leanInfo(info: TransportInfo): TransportInfo {
+  return {
+    name: info.name,
+    filename: info.filename,
+    hash: info.hash
   }
 }

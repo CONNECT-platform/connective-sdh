@@ -2,7 +2,36 @@ import { parse, join } from 'path';
 import { writeFile, readFile } from 'rxline/fs';
 
 import { Bundle } from './bundle';
-import { TransportInfo } from './transport/transport-info';
+import { TransportInfo, leanInfo } from './transport/transport-info';
+
+
+/**
+ *
+ * Denotes the metadata of a bundle
+ *
+ */
+export interface BundleMeta {
+  /**
+   * 
+   * The renderer used for the bundle's components.
+   * 
+   */
+  renderer?: TransportInfo,
+
+  /**
+   * 
+   * Init scripts that will execute upon bundle being loaded in client-side.
+   * 
+   */
+  init: TransportInfo[],
+
+  /**
+   * 
+   * Components included in the bundle.
+   * 
+   */
+  components: TransportInfo[],
+}
 
 
 /**
@@ -32,10 +61,18 @@ export function metafile(bundle: Bundle) {
  *
  */
 export function saveMeta(bundle: Bundle) {
+  const meta: BundleMeta = {
+    init: bundle.initImports.map(leanInfo),
+    components: bundle.imports.map(leanInfo),
+  };
+
+  if (bundle.rendererImport)
+    meta.renderer = leanInfo(bundle.rendererImport);
+
   return writeFile()({
     path: metafile(bundle),
     root: '',
-    content: JSON.stringify(bundle.imports.map(({hash, name, filename}) => ({ hash, name, filename })), undefined, 2)
+    content: JSON.stringify(meta, undefined, 2)
   });
 }
 
@@ -48,7 +85,7 @@ export function saveMeta(bundle: Bundle) {
  * @see metafile()
  *
  */
-export async function loadMeta(bundle: Bundle): Promise<TransportInfo[]> {
+export async function loadMeta(bundle: Bundle): Promise<BundleMeta> {
   return JSON.parse((await readFile()({
       path: metafile(bundle),
       root: '',

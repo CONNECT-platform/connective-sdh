@@ -1,10 +1,10 @@
-import { CompType } from '@connectv/html';
+import { CompType, RendererLike } from '@connectv/html';
 
 import { StaticRenderer } from '../static';
 
 import { TransportInfo, fetchInfo } from './transport/transport-info';
 import { getCompTransportInfo } from './transport/transport';
-import { RendererFactory, getRendererTransportInfo } from './transport/renderer-transport';
+import { TransportedFunc, getFuncTransportInfo } from './transport/func-transport';
 
 
 /**
@@ -62,6 +62,14 @@ export class Bundle {
   rendererImport: TransportInfo | undefined;
 
   /**
+   * 
+   * _Optional_, the custom init scripts to be executed when the bundle
+   * is loaded in the client-side.
+   * 
+   */
+  initImports: TransportInfo[];
+
+  /**
    *
    * The path of the file the bundle is stored on (or is to be stored on).
    * If not provided, will be the same as `.url`.
@@ -84,6 +92,7 @@ export class Bundle {
    */
   constructor(readonly url: string, path?: string) {
     this.imports = [];
+    this.initImports = [];
     this.path = path || this.url;
   }
 
@@ -181,12 +190,38 @@ export class Bundle {
    * Will set the client-side renderer used by the bundle to given
    * renderer factory. Useful for using custom client-side renderers.
    *
-   * @param factory
+   * @param factory the factory function to be transported. MUST BE result of `funcTransport()` function.
    * @returns `this` for chaining convenience.
    *
    */
-  withRenderer<R, T>(factory: RendererFactory<R, T>) {
-    this.rendererImport = getRendererTransportInfo(factory) || this.rendererImport;
+  withRenderer<R, T>(factory: TransportedFunc<RendererLike<R, T>>) {
+    const _rendererImport = getFuncTransportInfo(factory);
+    if (_rendererImport) {
+      if (!this.rendererImport || this.rendererImport && this.rendererImport.hash !== _rendererImport.hash) {
+        this.rendererImport = _rendererImport;
+        this.repack = true;
+      }
+    }
+
+    return this;
+  }
+
+  /**
+   *
+   * Will add the given init-function to initialization functions of this bundle.
+   * These functions will be executed when the bundle is loaded on the client-side.
+   *
+   * @param initFunc the initialization function to be transported. MUST BE result of `funcTransport()` function.
+   * @returns `this` for chaining convenience.
+   *
+   */
+  init(initFunc: TransportedFunc<void>) {
+    const _import = getFuncTransportInfo(initFunc);
+    if (!this.initImports.some(i => i.hash === _import.hash)) {
+      this.initImports.push(_import);
+      this.repack = true;
+    }
+
     return this;
   }
 }

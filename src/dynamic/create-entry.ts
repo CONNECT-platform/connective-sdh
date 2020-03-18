@@ -9,13 +9,13 @@ interface NormalizedTransportInfo extends TransportInfo {
 
 
 function normalize(imports: TransportInfo[]) {
-  const names = <{[name: string]: number}>{};
+  const nameCounter = <{[name: string]: number}>{};
   const res: NormalizedTransportInfo[] = [];
 
   imports.forEach(i => {
     const ni = {...i, ogname: i.name};
-    if (ni.name in names) ni.name = ni.name + names[ni.name];
-    names[ni.name] = (names[ni.name] || 0) + 1;
+    if (ni.name in nameCounter) ni.name = ni.name + nameCounter[ni.name];
+    nameCounter[ni.name] = (nameCounter[ni.name] || 0) + 1;
 
     res.push(ni);
   });
@@ -24,8 +24,20 @@ function normalize(imports: TransportInfo[]) {
 }
 
 
-export function createEntry(path: string, imports: TransportInfo[], rendererImport?: TransportInfo) {
+function normalImport(info: NormalizedTransportInfo) {
+  return `import { ${(info.ogname !== info.name)?`${info.ogname} as ${info.name}`:info.name} } from '${info.filename}';`
+}
+
+
+export function createEntry(path: string, 
+    imports: TransportInfo[], 
+    rendererImport?: TransportInfo, 
+    initImports?: TransportInfo[]
+  ) {
+
   const normal = normalize(imports);
+  const initNormal = normalize(initImports || []);
+
   const factory = {
     _import: {
       _artifact: 'Renderer',
@@ -44,8 +56,8 @@ export function createEntry(path: string, imports: TransportInfo[], rendererImpo
   }
 
   return writeFile()({ root: '', path, content: `import { ${factory._import._artifact} } from '${factory._import._ref}';
-
-${normal.map(info => `import { ${(info.ogname !== info.name)?`${info.ogname} as ${info.name}`:info.name} } from '${info.filename}';`).join('\n')}
+${initNormal.map(info => normalImport(info) + `${info.name}();`).join('\n')}
+${normal.map(normalImport).join('\n')}
 
 const components = {
 ${normal.map(info => `  '${info.hash}': ${info.name}`).join(',\n')}
