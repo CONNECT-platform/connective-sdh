@@ -20,7 +20,6 @@ compile(renderer =>
 ).save('dist/index.html');
 ```
 [► TRY IT!](https://codesandbox.io/s/connective-sdh-hellow-world-deom3)
->_if you are unable to open the "TRY IT!" links, please open them using Chrome_
 
 ### Example: Static HTML using Components
 
