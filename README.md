@@ -52,7 +52,7 @@ import { Card } from './card';
 compile(renderer => 
   <fragment>
     <h1>List of stuff</h1>
-    <Card title='Carrots' text='they are pretty good for you.'/>
+    <Card title='🥕Carrots' text='they are pretty good for you.'/>
   </fragment>
 ).save('dist/index.html');
 ```
