@@ -109,7 +109,7 @@ compile(renderer =>
 .then(() => save(bundle))                  // --> build the bundle and store it on fs
 
 ```
-[► TRY IT!](https://codesandbox.io/s/connective-sdh-9k53z)
+[► TRY IT!](https://codesandbox.io/s/connective-sdh-interactive-example-cgfwf)
 
 # Installation
 
