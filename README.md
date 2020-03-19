@@ -19,19 +19,29 @@ compile(renderer =>
   </html>
 ).save('dist/index.html');
 ```
-[► TRY IT!](https://repl.it/@eugene_gh/SDH-Hellow-World)
+[► TRY IT!](https://codesandbox.io/s/connective-sdh-hellow-world-deom3)
 
 ### Example: Static HTML using Components
 
 ```tsx
 // card.tsx
 
+const style = `
+  display: inline-block;
+  vertical-align: top;
+  padding: 8px;
+  border-radius: 8px;
+  margin: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .2);
+`;
+
 export function Card({ title, text }, renderer) {
-  return <div class="card">
+  return <div style={style}>
       <h2>{title}</h2>
       <p>{text}</p>
-  </div>
+    </div>
 }
+
 ```
 ```tsx
 // main.tsx
@@ -42,27 +52,40 @@ import { Card } from './card';
 compile(renderer => 
   <fragment>
     <h1>List of stuff</h1>
-    <Card title='Carrots' text='they are pretty good for you.'/>
+    <Card title='🥕Carrots' text='they are pretty good for you.'/>
   </fragment>
 ).save('dist/index.html');
 ```
-
-[► TRY IT!](https://repl.it/@eugene_gh/SDH-Hellow-World-Comp)
+[► TRY IT!](https://codesandbox.io/s/connective-sdh-static-components-r3b8i)
 
 ### Example: Interactive content
 
 ```tsx
 // counter.tsx
 
-import { state } from '@connectv/core';
-import { transport } from '@connectv/sdh';
+import { state } from "@connectv/core";
+import { transport } from "@connectv/sdh/transport";
+
+const style = `
+  border-radius: 3px;
+  background: #424242;
+  cursor: pointer;
+  padding: 8px;
+  color: white;
+  display: inline-block;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .12);
+`;
 
 export function Counter(_, renderer) {
   const count = state(0);
-  return <div onclick={() => count.value++}>You have clicked {count} times!</div>
+  return (
+    <div style={style} onclick={() => count.value++}>
+      You have clicked {count} times!
+    </div>
+  );
 }
 
-export const $Counter = transport(Counter); // --> ensures rendering on client-side
+export const $Counter = transport(Counter); // --> transports `Counter` to client-side
 ```
 ```tsx
 // main.tsx
@@ -83,10 +106,10 @@ compile(renderer =>
 )
 .post(bundle.collect())                    // --> collect all necessary dependencies in the bundle
 .save('dist/index.html')
-.then(() => {
-  save(bundle);                            // --> build the bundle and store it on fs
-});
+.then(() => save(bundle))                  // --> build the bundle and store it on fs
+
 ```
+[► TRY IT!](https://codesandbox.io/s/connective-sdh-interactive-example-cgfwf)
 
 # Installation
 
