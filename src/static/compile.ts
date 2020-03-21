@@ -1,16 +1,18 @@
 import { JSDOM } from 'jsdom';
 const registerGlobalDom = require('jsdom-global');
+import { Plugin } from '@connectv/html';
 
 import { StaticRenderer } from './renderer';
 import { Compiled } from './compiled';
 import { itsRendered } from '../shared/lifecycle';
+import { isPostProcessPlugin } from './types';
 
 
 /**
- * 
+ *
  * Denotes a function that renders some HTML content (in form of an HTML Node)
  * using given renderer and document objects.
- * 
+ *
  */
 export type RenderFunc = (
     renderer: StaticRenderer, 
@@ -41,21 +43,26 @@ function _copy_attrs(el: Node | null, target: HTMLElement) {
 
 
 /**
- * 
+ *
  * Will create a `Compiled` object from given render function. A render function
  * is any function that returns an HTML Node (or a promise of one), given the proper
  * renderer and document objects.
- * 
+ *
+ * It will also apply any post processors to the `Compiled` object from plugins
+ * that are `PostProcessPlugins`, allowing given renderer plugins to do some post processing
+ * on the final document.
+ *
  * @param render the render function
- * 
+ * @param plugins a list of renderer plugins to be attached to the renderer
+ *
  */
-export function compile(render: RenderFunc) {
+export function compile(render: RenderFunc, ...plugins: Plugin<any, any>[]) {
   try { document } catch(_) { registerGlobalDom(); }
 
   const dom = new JSDOM();
-  const renderer = new StaticRenderer();
+  const renderer = new StaticRenderer().plug(...plugins);
 
-  return new Compiled(dom, (async() => {
+  const compiled = new Compiled(dom, (async() => {
     const node = await render(
       renderer,
       dom.window.document
@@ -79,4 +86,7 @@ export function compile(render: RenderFunc) {
 
     itsRendered(dom.window.document);
   })());
+
+  renderer.plugins.filter(isPostProcessPlugin).forEach(plugin => compiled.post(doc => plugin.post(doc)));
+  return compiled;
 }
