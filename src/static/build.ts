@@ -4,6 +4,7 @@ import { Function } from 'rxline';
 import { Compiled, PostProcessor } from './compiled';
 import { StaticRenderer } from './renderer';
 import { compile } from './compile';
+import { Plugin } from '@connectv/html';
 
 
 /**
@@ -14,6 +15,22 @@ import { compile } from './compile';
  */
 export type BuildFunc<T> = (t: T, renderer: StaticRenderer, document: Document) => Node | Promise<Node>;
 
+/**
+ * 
+ * Denotes a function that builds a renderer plugin based on given file. The plugin will be plugged
+ * into the renderer that is subsequently used to render an HTML document from the file content.
+ * 
+ */
+export type PluginBuilder<T, R=any, Tag=any> = (f: File<T>) => Plugin<R, Tag>;
+
+/**
+ * 
+ * Denotes a function that creates a list of renderer plugins based on given file. These plugins
+ * will be plugged into the renderer that is subsequently used to render an HTML document from the
+ * file content.
+ * 
+ */
+export type PluginListBuilder<T, R=any, Tag=any> = (f: File<T>) => Plugin<R, Tag>[];
 
 /**
  * 
@@ -24,11 +41,52 @@ export type BuildFunc<T> = (t: T, renderer: StaticRenderer, document: Document) 
  * @param builder
  * 
  */
-export function build<T>(builder: BuildFunc<T>): Function<File<T>, File<Compiled>> {
+export function build<T>(builder: BuildFunc<T>): Function<File<T>, File<Compiled>>;
+
+/**
+ * 
+ * Convenience function for rxline files. Returns a transform that converts the content 
+ * of an rxline `File<T>` using the given `BuildFunc<T>` to a file whose content 
+ * is a compiled document. Uses the given `PluginListBuilder` function to create plugins
+ * that are to be plugged in the renderer to be used.
+ * 
+ * @param builder
+ * @param pluginBuilder
+ * 
+ */
+export function build<T>(builder: BuildFunc<T>, pluginBuilder: PluginListBuilder<T>): Function<File<T>, File<Compiled>>;
+
+/**
+ * 
+ * Convenience function for rxline files. Returns a transform that converts the content 
+ * of an rxline `File<T>` using the given `BuildFunc<T>` to a file whose content 
+ * is a compiled document. Uses provided plugins or `PluginBuilder`s to create plugins
+ * that are to be plugged in the renderer to be used.
+ * 
+ * @param builder
+ * @param plugins
+ * 
+ */
+export function build<T>(builder: BuildFunc<T>, ...plugins: (PluginBuilder<T> | Plugin<any, any>)[]):
+  Function<File<T>, File<Compiled>>;
+
+export function build<T>(builder: BuildFunc<T>, 
+                         pluginBuilder?: PluginListBuilder<T> | PluginBuilder<T> | Plugin<any, any>,
+                        ...plugins: (PluginBuilder<T> | Plugin<any, any>)[]
+  ): Function<File<T>, File<Compiled>> {
+  let _pluginBuilder: PluginListBuilder<T>;
+  if (pluginBuilder) {
+    if (typeof pluginBuilder === 'function' && plugins) _pluginBuilder = pluginBuilder as PluginListBuilder<T>;
+    else _pluginBuilder = (f: File<T>) => 
+      [pluginBuilder as PluginBuilder<T>, ...plugins]
+      .map(p => (typeof p === 'function') ? p(f) : p);
+  }
+
   return function(f: File<T>) {
+    const plugins = _pluginBuilder ? _pluginBuilder(f) : [];
     return {
       ...f,
-      content: compile((renderer, document) => builder(f.content, renderer, document))
+      content: compile((renderer, document) => builder(f.content, renderer, document), ...plugins)
     };
   }
 }
