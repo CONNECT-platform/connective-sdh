@@ -13,7 +13,7 @@ import { Plugin } from '@connectv/html';
  * input.
  * 
  */
-export type BuildFunc<T> = (t: T, renderer: StaticRenderer, document: Document) => Node | Promise<Node>;
+export type BuildFunc<T> = (t: T, renderer: StaticRenderer, file: File<T>, document: Document) => Node | Promise<Node>;
 
 /**
  * 
@@ -86,7 +86,7 @@ export function build<T>(builder: BuildFunc<T>,
     const plugins = _pluginBuilder ? _pluginBuilder(f) : [];
     return {
       ...f,
-      content: compile((renderer, document) => builder(f.content, renderer, document), ...plugins)
+      content: compile((renderer, document) => builder(f.content, renderer, f, document), ...plugins)
     };
   }
 }
