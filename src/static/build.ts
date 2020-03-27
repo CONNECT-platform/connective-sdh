@@ -43,18 +43,6 @@ export type PluginListBuilder<T, R=any, Tag=any> = (f: File<T>) => Plugin<R, Tag
  */
 export function build<T>(builder: BuildFunc<T>): Function<File<T>, File<Compiled>>;
 
-/**
- * 
- * Convenience function for rxline files. Returns a transform that converts the content 
- * of an rxline `File<T>` using the given `BuildFunc<T>` to a file whose content 
- * is a compiled document. Uses the given `PluginListBuilder` function to create plugins
- * that are to be plugged in the renderer to be used.
- * 
- * @param builder
- * @param pluginBuilder
- * 
- */
-export function build<T>(builder: BuildFunc<T>, pluginBuilder: PluginListBuilder<T>): Function<File<T>, File<Compiled>>;
 
 /**
  * 
@@ -71,19 +59,16 @@ export function build<T>(builder: BuildFunc<T>, ...plugins: (PluginBuilder<T> | 
   Function<File<T>, File<Compiled>>;
 
 export function build<T>(builder: BuildFunc<T>, 
-                         pluginBuilder?: PluginListBuilder<T> | PluginBuilder<T> | Plugin<any, any>,
                         ...plugins: (PluginBuilder<T> | Plugin<any, any>)[]
   ): Function<File<T>, File<Compiled>> {
-  let _pluginBuilder: PluginListBuilder<T>;
-  if (pluginBuilder) {
-    if (typeof pluginBuilder === 'function' && plugins) _pluginBuilder = pluginBuilder as PluginListBuilder<T>;
-    else _pluginBuilder = (f: File<T>) => 
-      [pluginBuilder as PluginBuilder<T>, ...plugins]
-      .map(p => (typeof p === 'function') ? p(f) : p);
+  let pluginBuilder: PluginListBuilder<T>;
+  if (plugins && plugins.length > 0) {
+    pluginBuilder = (f: File<T>) => 
+      plugins.map(p => (typeof p === 'function') ? p(f) : p);
   }
 
   return function(f: File<T>) {
-    const plugins = _pluginBuilder ? _pluginBuilder(f) : [];
+    const plugins = pluginBuilder ? pluginBuilder(f) : [];
     return {
       ...f,
       content: compile((renderer, document) => builder(f.content, renderer, f, document), ...plugins)
