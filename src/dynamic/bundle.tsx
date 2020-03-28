@@ -181,7 +181,8 @@ export class Bundle {
         }
       });
 
-      if (used) renderer.render(<script src={this.url}></script>).on(document.head);
+      if (used || this.initImports.length > 0)
+        renderer.render(<script src={this.url}></script>).on(document.head);
     }
   }
 
