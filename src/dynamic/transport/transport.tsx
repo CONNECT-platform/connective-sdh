@@ -90,7 +90,7 @@ export function transportRef() { return autoId(); }
  * component. However, you CANNOT pass any child elements to the transport component.
  *
  */
-export function transport(component: CompType<any, any>) {
+export function transport(component: any) {
   const trace = callTrace();
   if (!trace) return component;   // --> unable to get trace info, perhaps running on client.
 
