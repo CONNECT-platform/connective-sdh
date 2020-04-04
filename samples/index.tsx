@@ -5,8 +5,8 @@ import { $initB } from './initB';
 
 
 (async() => {
-  // const bundle = new Bundle('./bundle.js', './dist/bundle.js');
-  const bundle = await load('./dist/bundle.js', './bundle.js');
+  const bundle = new Bundle('./bundle.js', './dist/bundle.js');
+  // const bundle = await load('./dist/bundle.js', './bundle.js');
 
   compile(renderer =>
     <fragment>
@@ -21,7 +21,7 @@ import { $initB } from './initB';
   .save('dist/index.html')
   .then(() => {
     bundle.init($initA).init($initB);
-    save(bundle);                            // --> build the bundle and store it on fs
+    save(bundle, {mode: 'development'});     // --> build the bundle and store it on fs
   });
 })()
 

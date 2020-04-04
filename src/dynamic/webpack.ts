@@ -6,7 +6,7 @@ import { parse, resolve } from 'path';
 const merge = require('webpack-merge');
 
 
-const _DefaultConfig: Configuration = {
+const _DefaultProdModule: Configuration = {
   module: {
     rules: [
       {
@@ -16,6 +16,28 @@ const _DefaultConfig: Configuration = {
       },
     ],
   },
+}
+
+
+const _DefaultDevModule: Configuration = {
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: [{
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true
+          }
+        }],
+        exclude: /node_modules/,
+      },
+    ],
+  },
+}
+
+
+const _DefaultConfig: Configuration = {
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ]
   },
@@ -29,13 +51,16 @@ const _DefaultConfig: Configuration = {
 
 export async function webPack(inpath: string, outpath: string, config: Configuration = {}) {
   const { dir, base } = parse(outpath);
-  const conf = merge(_DefaultConfig, config, {
+  let conf = merge(_DefaultConfig, config, {
     entry: resolve(inpath),
     output: {
       filename: base,
       path: resolve(dir),
     }
-  });
+  }) as Configuration;
+
+  if (conf.mode === 'development') conf = merge(conf, _DefaultDevModule) as Configuration;
+  else conf = merge(conf, _DefaultProdModule) as Configuration;
 
   return new Promise((resolve, reject) => {
     webpack(conf, (err, res) => {
