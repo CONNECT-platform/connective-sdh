@@ -182,7 +182,7 @@ export class Bundle {
       });
 
       if (used || this.initImports.length > 0)
-        renderer.render(<script src={this.url}></script>).on(document.head);
+        renderer.render(<script async defer src={this.url}/>).on(document.head);
     }
   }
 
