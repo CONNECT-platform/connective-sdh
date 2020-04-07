@@ -1,5 +1,5 @@
 import { state } from '@connectv/core';
-import { transport } from '../transport';
+import { transport } from '../src/dynamic/transport';
 
 export function Counter(_: any, renderer: any) {
   const count = state(0);

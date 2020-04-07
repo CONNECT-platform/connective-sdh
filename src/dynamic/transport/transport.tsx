@@ -120,7 +120,7 @@ export function transport(component: any) {
         :''
       }
     }
-  });
+  }
 
   if (document.readyState != 'loading') load();
   else window.addEventListener('DOMContentLoaded', load);
