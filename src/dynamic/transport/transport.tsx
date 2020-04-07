@@ -100,7 +100,7 @@ export function transport(component: any) {
     const id = props._transport || transportRef();
     const script = <script id={id}>
 (function(){'{'}
-  var load = function(){'{'}
+  function load(){'{'}
     if (window.__sdh_transport){'{'}
       window.__sdh_transport("{id}", "{info.hash}", {
           Promise.all(
@@ -120,10 +120,10 @@ export function transport(component: any) {
         :''
       }
     }
-  }
+  };
 
-  if (document.readyState != 'loading') load();
-  else window.addEventListener('DOMContentLoaded', load);
+  if (document.readyState == 'complete') load();
+  else window.addEventListener('load', load);
 })()
     </script>;
     attachInfo(script, info);

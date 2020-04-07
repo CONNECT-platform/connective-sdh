@@ -1,6 +1,6 @@
 {
   "name": "@connectv/sdh",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Library for Static (Server-side) and Dynamic (Client-side) HTML rendering",
   "main": "dist/es5/index.js",
   "module": "dist/es6/index.js",
