@@ -3,10 +3,10 @@ import { Configuration } from 'webpack';
 import { parse, resolve } from 'path';
 
 
-const merge = require('webpack-merge');
+const merge = /*#__PURE__*/require('webpack-merge');
 
 
-const _DefaultProdModule: Configuration = {
+const _DefaultProdModule: Configuration = /*#__PURE__*/{
   module: {
     rules: [
       {
@@ -19,7 +19,7 @@ const _DefaultProdModule: Configuration = {
 }
 
 
-const _DefaultDevModule: Configuration = {
+const _DefaultDevModule: Configuration = /*#__PURE__*/{
   module: {
     rules: [
       {
@@ -37,7 +37,7 @@ const _DefaultDevModule: Configuration = {
 }
 
 
-const _DefaultConfig: Configuration = {
+const _DefaultConfig: Configuration = /*#__PURE__*/{
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ]
   },
