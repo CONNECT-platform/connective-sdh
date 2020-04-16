@@ -3,6 +3,8 @@ import { $Counter } from './counter';
 import { $initA } from './initA';
 import { $initB } from './initB';
 
+import { Buttons$ } from '@test/pkg';
+
 
 (async() => {
   const bundle = new Bundle('./bundle.js', './dist/bundle.js');
@@ -14,6 +16,7 @@ import { $initB } from './initB';
         So this content will be prerendered, but the following component will be
         rendered on the client side.
       </p>
+      <Buttons$>Halo</Buttons$>
       <$Counter/>
     </fragment>
   )

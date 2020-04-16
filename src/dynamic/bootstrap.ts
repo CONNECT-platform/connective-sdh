@@ -2,6 +2,7 @@ import { join, parse } from 'path';
 
 import { createEntry } from './create-entry';
 import { Bundle } from './bundle';
+import { modularize } from './modularize';
 
 
 /**
@@ -18,6 +19,7 @@ import { Bundle } from './bundle';
 export async function bootstrap(bundle: Bundle) {
   const { dir, name } = parse(bundle.path);
   const entryPath = join(dir, name + '.entry.js');
+  modularize(bundle);
   await createEntry(entryPath, bundle.imports, bundle.rendererImport, bundle.initImports);
 
   return entryPath;
