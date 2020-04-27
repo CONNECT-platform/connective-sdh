@@ -1,3 +1,4 @@
+import { sep } from 'path';
 import { createHash } from 'crypto';
 import { getLSMarker } from '../../shared/lifecycle';
 
@@ -54,7 +55,7 @@ function hash(x: string) {
  *
  */
 export function createInfo(name: string, trace: NodeJS.CallSite): TransportInfo {
-  const filename = trace.getFileName() || '';
+  const filename = (trace.getFileName() || '').split(sep).join('/');
   return { name, filename, hash: hash(filename + '::' + name), resolved: false };
 }
 
