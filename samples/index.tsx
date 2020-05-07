@@ -21,6 +21,9 @@ import { Buttons$ } from '@test/pkg';
     </fragment>
   )
   .post(bundle.collect())                    // --> collect all necessary dependencies in the bundle
+  .post(html => {
+    console.log(html.body);
+  })
   .save('dist/index.html')
   .then(() => {
     bundle.init($initA).init($initB);

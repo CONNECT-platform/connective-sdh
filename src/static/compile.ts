@@ -59,7 +59,7 @@ function _copy_attrs(el: Node | null, target: HTMLElement) {
 export function compile(render: RenderFunc, ...plugins: Plugin<any, any>[]) {
   try { document } catch(_) { registerGlobalDom(); }
 
-  const dom = new JSDOM();
+  const dom = new JSDOM('<!DOCTYPE html>');
   const renderer = new StaticRenderer().plug(...plugins);
 
   const compiled = new Compiled(dom, (async() => {
