@@ -43,7 +43,7 @@ export interface TransportInfo {
 
 
 function hash(x: string) {
-  return createHash('md5').update(x).digest('base64').toString();
+  return createHash ? createHash('md5').update(x).digest('base64').toString() : '';
 }
 
 
@@ -55,7 +55,7 @@ function hash(x: string) {
  *
  */
 export function createInfo(name: string, trace: NodeJS.CallSite): TransportInfo {
-  const filename = (trace.getFileName() || '').split(sep).join('/');
+  const filename = (trace.getFileName() || '').split(sep || '/').join('/');
   return { name, filename, hash: hash(filename + '::' + name), resolved: false };
 }
 

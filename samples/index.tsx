@@ -3,7 +3,7 @@ import { $Counter } from './counter';
 import { $initA } from './initA';
 import { $initB } from './initB';
 
-import { Buttons$ } from '@test/pkg';
+// import { Buttons$ } from '@test/pkg';
 
 
 (async() => {
@@ -16,7 +16,7 @@ import { Buttons$ } from '@test/pkg';
         So this content will be prerendered, but the following component will be
         rendered on the client side.
       </p>
-      <Buttons$>Halo</Buttons$>
+      {/* <Buttons$>Halo</Buttons$> */}
       <$Counter/>
     </fragment>
   )

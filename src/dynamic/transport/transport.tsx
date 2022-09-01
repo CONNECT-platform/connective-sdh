@@ -124,6 +124,8 @@ export function transport(component: any) {
 
   if (document.readyState == 'complete') load();
   else window.addEventListener('load', load);
+
+  window.setImmediate = window.setImmediate || function(f){'{'}setTimeout(f, 0)};
 })()
     </script>;
     attachInfo(script, info);
